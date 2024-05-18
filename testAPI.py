@@ -107,7 +107,7 @@ def chat_completion_request(messages, tools=None, tool_choice=None, model=GPT_MO
             temperature=0.8,
             max_tokens=2048,
             top_p=1,
-            frequency_penalty=-1,
+            frequency_penalty=0,
             presence_penalty=0
         )
         return response
