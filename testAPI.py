@@ -8,7 +8,7 @@ import json
 
 # API를 시스템 환경변수로부터 가져옴
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-GPT_MODEL = "gpt-4"
+GPT_MODEL = "gpt-4o"
 tools = [
     {
         "type": "function",
