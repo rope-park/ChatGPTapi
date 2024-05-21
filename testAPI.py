@@ -55,6 +55,31 @@ tools = [
     {
         "type": "function",
         "function": {
+            "name": "scoring",
+            "description": "사용자의 답변에 대한 점수를 매깁니다. 점수는 100점 만점으로 기준은 다음과 같습니다. 각 기준에 대한 점수는 25점으로 합니다. 다음 기준 중 '질문에 대해 답변이 적절한지 문맥 검사'만 수행하고, 나머지는 개발자로부터 제공받습니다.\
+                사용자의 말의 빠르기, \
+                침묵 시간, \
+                질문에 대해 답변이 적절한지 문맥 검사, \
+                간투어(큰 의미 없는 표현으로, 발성자가 다음 발성 준비를 위해 소요되는 시간을 벌기 위해 발성하는 표현, 언어 습관)('음', '아', '어', '뭐', '그', '또', '좀', '막', '근데', '약간', '조금', '정말', '뭔가', '진짜', '아니', '너무', '이제', '그냥', '그런', '그런데', '그니까', '그러니까', '그래서', '뭐랄까', '이렇게')",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "context": {
+                        "type": "integer",
+                        "description": "질문에 대한 답변이 적절한지 문맥 검사"
+                        },
+                    "calculate_total_score": {
+                        "type": "integer",
+                        "description": "총합 점수"
+                        },
+                    },
+                "required": ["context", "calculate_score"],
+            },
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name" : "replace_unnecessary_words_with_recommended_words",
             "description": "문맥상 불필요한 단어를 대체할 수 있는 표현을 추천합니다.",
             "parameters": {
@@ -115,6 +140,15 @@ def chat_completion_request(messages, tools=None, tool_choice=None, model=GPT_MO
         print("Unable to generate ChatCompletion response")
         print(f"Exception: {e}")
         return e
+
+# context score 추출
+def extract_context_score(response):
+    try:
+        score = int(response.choices[0].message.content.strip())
+        return score
+    except ValueError:
+        print("Error : Unable to extract context score")
+        return None
 
 # 대화를 보기 좋게 출력하는 함수
 def print_conversation(chat_response):
